@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mahadev Travels - Tours & Travels</title>
+  <style>
+    @keyframes fadeInUp {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f4f4f4;
+    }
+
+    header {
+      background: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e') no-repeat center center/cover;
+      height: 100vh;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 3.5rem;
+      margin-bottom: 20px;
+      font-family: 'Pacifico', cursive;
+      color: #ffdf00;
+      text-shadow: 2px 2px 5px rgba(0,0,0,0.6);
+      animation: fadeInUp 1.2s ease-out;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    header p {
+      font-size: 1.2rem;
+      max-width: 600px;
+    }
+
+    nav {
+      background-color: #333;
+      display: flex;
+      justify-content: center;
+    }
+
+    nav a {
+      color: white;
+      padding: 15px 20px;
+      text-decoration: none;
+      display: block;
+    }
+
+    nav a:hover {
+      background-color: #575757;
+    }
+
+    .section {
+      padding: 60px 20px;
+      text-align: center;
+    }
+
+    .section h2 {
+      margin-bottom: 30px;
+      color: #333;
+    }
+
+    .tours, .cars {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .tour-card, .car-card {
+      background-color: white;
+      padding: 20px;
+      width: 300px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+    }
+
+    .tour-card img, .car-card img {
+      width: 100%;
+      border-radius: 10px;
+    }
+
+    .tour-card h3, .car-card h3 {
+      margin: 15px 0 10px;
+    }
+
+    .booking-form {
+      margin-top: 30px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .booking-form input, .booking-form button {
+      padding: 10px;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .booking-form button {
+      background-color: #333;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    .booking-form button:hover {
+      background-color: #555;
+    }
+
+    footer {
+      background-color: #333;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+  </style>
+  <script>
+function searchTours() {
+  const fromLocation = document.getElementById('fromLocationInput').value;
+  const toLocation = document.getElementById('toLocationInput').value;
+  const startDate = document.getElementById('startDateInput').value;
+  const endDate = document.getElementById('endDateInput').value;
+  const people = document.getElementById('peopleInput').value;
+
+  if (!fromLocation || !toLocation || !startDate || !endDate || !people) {
+    alert('Please fill all fields.');
+    return;
+  }
+
+  const service = new google.maps.DistanceMatrixService();
+  service.getDistanceMatrix(
+    {
+      origins: [fromLocation],
+      destinations: [toLocation],
+      travelMode: 'DRIVING',
+      unitSystem: google.maps.UnitSystem.METRIC
+    },
+    function(response, status) {
+      if (status !== 'OK' || response.rows[0].elements[0].status !== 'OK') {
+        alert('Could not calculate distance. Please check location names.');
+        return;
+      }
+
+      const distanceKm = response.rows[0].elements[0].distance.value / 1000;
+      const ratePerKm = 13;
+      const tollCost = 320;
+
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      const nights = Math.max(0, (end - start) / (1000 * 60 * 60 * 24));
+      const nightCharges = nights * 300;
+      const travelCost = Math.round(distanceKm * ratePerKm + tollCost + nightCharges);
+
+      const summary = document.getElementById('tripSummary');
+      summary.style.display = 'block';
+      summary.innerHTML = `
+        <h3>Trip Summary</h3>
+        <p><strong>From:</strong> ${fromLocation}</p>
+        <p><strong>To:</strong> ${toLocation}</p>
+        <p><strong>Distance:</strong> ${distanceKm.toFixed(2)} km</p>
+        <p><strong>Toll Charges:</strong> ₹${tollCost}</p>
+        <p><strong>Nights:</strong> ${nights}</p>
+        <p><strong>Total Cost:</strong> ₹${travelCost}</p>
+      `;
+    }
+  );
+}
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1tN2N0H3kMuTIxtn4pmQBvHrvQR0F9YI&libraries=places"></script>
+</head>
+<body>
+  <nav>
+    <a href="#home">Home</a>
+    
+    <a href="#cars">Tourist Cars</a>
+    <a href="#contact">Contact</a>
+  </nav>
+
+  <header id="home">
+    <h1><img src="https://img.icons8.com/fluency/48/temple.png" alt="logo" style="vertical-align: middle; margin-right: 10px;">Mahadev Travels</h1>
+    <p>Discover beautiful destinations with our affordable and customizable tour packages.</p>
+  </header>
+
+  
+
+  <section id="cars" class="section">
+    <h2>Tourist Vehicles Available</h2>
+    <div class="cars">
+      <div class="car-card">
+        <img src="https://imgd.aeplcdn.com/370x208/n/cw/ec/53507/dzire-exterior-right-front-three-quarter-7.jpeg" alt="Dzire" />
+        <h3>Maruti Suzuki Dzire</h3>
+        <p>Spacious and perfect for long-distance family tours.</p>
+      </div>
+      <div class="car-card">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/e/e4/Tata_Harrier_2020.jpg" alt="Tata Harrier" />
+        <h3>Tata Harrier</h3>
+        <p>Luxury SUV for road trips across India.</p>
+      </div>
+      <div class="car-card">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/0/03/Force_Traveller_3700.jpg" alt="Force Traveller" />
+        <h3>Force Traveller</h3>
+        <p>Ideal for group travel with comfortable seating.</p>
+      </div>
+    </div>
+
+    <div class="booking-form">
+  <div style="display: flex; flex-direction: column;">
+    <label for="fromLocationInput">From:</label>
+    <input type="text" id="fromLocationInput" placeholder="Enter starting location">
+  </div>
+  <div style="display: flex; flex-direction: column;">
+    <label for="toLocationInput">To:</label>
+    <input type="text" id="toLocationInput" placeholder="Enter destination">
+  </div>
+  <div style="display: flex; flex-direction: column;">
+    <label for="startDateInput">Start Date:</label>
+    <input type="date" id="startDateInput">
+  </div>
+  <div style="display: flex; flex-direction: column;">
+    <label for="endDateInput">End Date:</label>
+    <input type="date" id="endDateInput">
+  </div>
+  <div style="display: flex; flex-direction: column;">
+    <label for="peopleInput">Number of People:</label>
+    <input type="number" id="peopleInput" min="1">
+  </div>
+  <button onclick="searchTours()">Search Tours</button>
+</div>
+  <div id="tripSummary" class="section" style="display: none;"></div>
+</section>
+<section id="contact" class="section">
+    <h2>Contact Us</h2>
+    <p>Email: info@exploreworld.com | Phone: +91 98765 43210</p>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 Mahadev Travels. All rights reserved.</p>
+  </footer>
+</body>
+</html>
