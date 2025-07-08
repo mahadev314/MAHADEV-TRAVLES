@@ -190,13 +190,19 @@ function searchTours() {
     }
   );
 }
-</script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1tN2N0H3kMuTIxtn4pmQBvHrvQR0F9YI&libraries=places"></script>
+
+function initAutocomplete() {
+  const fromInput = document.getElementById('fromLocationInput');
+  const toInput = document.getElementById('toLocationInput');
+  new google.maps.places.Autocomplete(fromInput);
+  new google.maps.places.Autocomplete(toInput);
+}
+  </script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1tN2N0H3kMuTIxtn4pmQBvHrvQR0F9YI&libraries=places&callback=initAutocomplete" async defer></script>
 </head>
 <body>
   <nav>
     <a href="#home">Home</a>
-    
     <a href="#cars">Tourist Cars</a>
     <a href="#contact">Contact</a>
   </nav>
@@ -205,8 +211,6 @@ function searchTours() {
     <h1><img src="https://img.icons8.com/fluency/48/temple.png" alt="logo" style="vertical-align: middle; margin-right: 10px;">Mahadev Travels</h1>
     <p>Discover beautiful destinations with our affordable and customizable tour packages.</p>
   </header>
-
-  
 
   <section id="cars" class="section">
     <h2>Tourist Vehicles Available</h2>
@@ -256,10 +260,10 @@ function searchTours() {
 <section id="contact" class="section">
     <h2>Contact Us</h2>
     <p>Email: info@exploreworld.com | Phone: +91 98765 43210</p>
-  </section>
+</section>
 
-  <footer>
-    <p>&copy; 2025 Mahadev Travels. All rights reserved.</p>
-  </footer>
+<footer>
+  <p>&copy; 2025 Mahadev Travels. All rights reserved.</p>
+</footer>
 </body>
 </html>
